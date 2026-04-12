@@ -2,6 +2,7 @@ package com.emobile.springtodo.controller;
 
 import com.emobile.springtodo.dto.TaskDto;
 import com.emobile.springtodo.service.ToDoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +23,12 @@ public class ToDoController {
     private final ToDoService service;
 
     @PostMapping
-    public TaskDto addTask(@RequestBody TaskDto dto) {
+    public TaskDto addTask(@Valid @RequestBody TaskDto dto) {
         return service.addTask(dto);
     }
 
     @PutMapping("/{id}")
-    public TaskDto updateTask(@PathVariable String id, @RequestBody TaskDto dto) {
+    public TaskDto updateTask(@PathVariable String id, @Valid @RequestBody TaskDto dto) {
         return service.updateTask(id, dto);
     }
 
