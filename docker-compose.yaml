@@ -5,9 +5,9 @@ services:
     image: postgres:latest
     container_name: todo-db
     ports:
-      - 5431:5431
+      - 5431:5432
     environment:
-      - POSTGRES_DB=todo
+      - POSTGRES_DB=task
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
 
