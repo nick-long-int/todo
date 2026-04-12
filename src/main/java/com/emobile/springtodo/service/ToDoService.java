@@ -5,13 +5,19 @@ import com.emobile.springtodo.mapper.TaskMapper;
 import com.emobile.springtodo.model.Task;
 import com.emobile.springtodo.repo.TaskRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Key;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "tasks", cacheManager = "cacheManager")
 public class ToDoService {
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
@@ -30,17 +36,20 @@ public class ToDoService {
             .toList();
     }
 
+    @Cacheable(key = "#id")
     @Transactional(readOnly = true)
     public TaskDto getTaskById(String id) {
         Task task = taskRepository.findById(id);
         return taskMapper.taskToTaskDto(task);
     }
 
+    @CacheEvict(key = "#id")
     @Transactional
     public void deleteTaskById(String id) {
         taskRepository.deleteById(id);
     }
 
+    @CachePut(key = "#id")
     @Transactional
     public TaskDto updateTask(String id, TaskDto taskDto) {
         Task task = taskRepository.findById(id);
