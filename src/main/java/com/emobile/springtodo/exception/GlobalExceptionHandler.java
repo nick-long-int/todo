@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String,String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
         e.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
@@ -40,9 +40,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseExceptionDto handleRuntimeException(RuntimeException e) {
         return new ResponseExceptionDto(
-          HttpStatus.INTERNAL_SERVER_ERROR.value(),
-          e.getMessage(),
-          Instant.now().toString()
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            e.getMessage(),
+            Instant.now().toString()
         );
     }
 

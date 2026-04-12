@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TaskDto{
+public class TaskDto {
     private String id;
     @NotBlank
     @Size(min = 5, max = 20)
