@@ -61,11 +61,11 @@ class ToDoServiceTest {
     @DisplayName("Получение списка задач")
     void testGetAllTasks(){
 
-        when(taskRepository.findAll()).thenReturn(new ArrayList<Task>());
+        when(taskRepository.findAll(anyInt(), anyInt())).thenReturn(new ArrayList<Task>());
 
-        List<TaskDto> result = service.getAllTasks();
+        List<TaskDto> result = service.getAllTasks(anyInt(), anyInt());
 
-        verify(taskRepository, times(1)).findAll();
+        verify(taskRepository, times(1)).findAll(anyInt(), anyInt());
         assertNotNull(result);
     }
 

@@ -29,8 +29,8 @@ public class ToDoService {
     }
 
     @Transactional(readOnly = true)
-    public List<TaskDto> getAllTasks() {
-        return taskRepository.findAll()
+    public List<TaskDto> getAllTasks(int limit, int offset) {
+        return taskRepository.findAll(limit, offset)
             .stream()
             .map(taskMapper::taskToTaskDto)
             .toList();

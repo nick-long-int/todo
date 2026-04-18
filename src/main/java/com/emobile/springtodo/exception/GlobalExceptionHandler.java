@@ -1,5 +1,6 @@
 package com.emobile.springtodo.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -26,14 +27,27 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
         e.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return errors;
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleConstraintViolationException(ConstraintViolationException e) {
+        Map<String, String> errors = new HashMap<>();
+        e.getConstraintViolations().forEach((constraintViolation) -> {
+            String fieldName = constraintViolation.getPropertyPath().toString();
+            String errorMessage = constraintViolation.getMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 
     @ExceptionHandler(RuntimeException.class)

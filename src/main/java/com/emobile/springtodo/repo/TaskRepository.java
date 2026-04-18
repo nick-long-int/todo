@@ -24,8 +24,10 @@ public class TaskRepository {
             rs.getString("description"),
             rs.getString("status"));
 
-    public List<Task> findAll() {
-        return jdbcTemplate.query("select * from task", ROW_MAPPER);
+    public List<Task> findAll(int limit, int offset) {
+        return jdbcTemplate.query(
+            "select * from task order by id limit ? offset ?"
+            , ROW_MAPPER, limit, offset);
     }
 
     public Task findById(String id) {
