@@ -3,6 +3,7 @@ package com.emobile.springtodo.service;
 import com.emobile.springtodo.dto.TaskDto;
 import com.emobile.springtodo.mapper.TaskMapper;
 import com.emobile.springtodo.model.Task;
+import com.emobile.springtodo.model.TaskStatus;
 import com.emobile.springtodo.repo.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -25,6 +26,7 @@ public class ToDoService {
     @Transactional
     public TaskDto addTask(TaskDto taskDto) {
         Task task = taskMapper.taskDtoToTask(taskDto);
+        task.setStatus(TaskStatus.NEW.name());
         return taskMapper.taskToTaskDto(taskRepository.save(task));
     }
 
