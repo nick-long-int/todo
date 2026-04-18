@@ -21,6 +21,7 @@ public class ToDoService {
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
 
+    @CachePut(key = "#result.id")
     @Transactional
     public TaskDto addTask(TaskDto taskDto) {
         Task task = taskMapper.taskDtoToTask(taskDto);
