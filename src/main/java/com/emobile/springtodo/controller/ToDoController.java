@@ -16,33 +16,32 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/todo")
 @RequiredArgsConstructor
-public class ToDoController {
+public class ToDoController implements ToDoApi {
 
     private final ToDoService service;
 
-    @PostMapping
+    @Override
     public TaskDto addTask(@Valid @RequestBody TaskDto dto) {
         return service.addTask(dto);
     }
 
-    @PutMapping("/{id}")
-    public TaskDto updateTask(@PathVariable String id, @Valid @RequestBody TaskDto dto) {
+    @Override
+    public TaskDto updateTask(@Valid @RequestBody TaskDto dto, @PathVariable String id) {
         return service.updateTask(id, dto);
     }
 
-    @GetMapping
+    @Override
     public List<TaskDto> getAllTasks() {
         return service.getAllTasks();
     }
 
-    @GetMapping("/{id}")
+    @Override
     public TaskDto getTaskById(@PathVariable String id) {
         return service.getTaskById(id);
     }
 
-    @DeleteMapping("/{id}")
+    @Override
     public void deleteTaskById(@PathVariable String id) {
         service.deleteTaskById(id);
     }
