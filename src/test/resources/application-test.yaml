@@ -1,0 +1,11 @@
+spring:
+  liquibase:
+    enabled: true
+  test:
+    database:
+      replace: none
+
+info:
+  app:
+    name: SpringToDo
+    description: Todo API
