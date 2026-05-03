@@ -1,0 +1,67 @@
+image: maven:latest
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=./.m2/repository"
+
+stages:
+  - build
+  - test
+  - package
+  - push-image
+
+
+build:
+  stage: build
+  only:
+    - dev
+    - merge_requests
+  script:
+    - 'mvn clean compile'
+  cache:
+    paths:
+      - ./target
+      - ./.m2
+
+test:
+  stage: test
+  only:
+    - dev
+    - merge_requests
+  script:
+    - 'mvn test'
+  cache:
+    paths:
+      - ./target
+      - ./.m2
+
+package:
+  stage: package
+  only:
+    - dev
+    - main
+  script:
+    - 'mvn package -Dmaven.test.skip=true'
+  artifacts:
+    paths:
+      - target/*.jar
+  cache:
+    policy: pull
+    paths:
+      - ./target
+      - ./.m2
+
+push-image:
+  stage:
+    - push-image
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+  script:
+    - docker build -t $DOCKER_HUB_USER/SpringToDo:$CI_COMMIT_SHORT_SHA .
+    - docker push $DOCKER_HUB_USER/SpringToDo:$CI_COMMIT_SHORT_SHA
+  dependencies:
+    - package
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
