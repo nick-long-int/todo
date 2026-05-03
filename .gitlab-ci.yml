@@ -51,8 +51,7 @@ package:
       - ./.m2
 
 push-image:
-  stage:
-    - push-image
+  stage: push-image
   image: docker:latest
   services:
     - docker:dind
