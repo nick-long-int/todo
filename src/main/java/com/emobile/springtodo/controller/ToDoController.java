@@ -1,5 +1,6 @@
 package com.emobile.springtodo.controller;
 
+import com.emobile.springtodo.dto.PageResponse;
 import com.emobile.springtodo.dto.TaskDto;
 import com.emobile.springtodo.service.ToDoService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,7 +39,7 @@ public class ToDoController implements ToDoApi {
     }
 
     @Override
-    public List<TaskDto> getAllTasks(
+    public PageResponse getAllTasks(
         @RequestParam(defaultValue = "20") @Min(1) @Max(100)
         int limit,
         @RequestParam(defaultValue = "0") @Min(0)int offset) {

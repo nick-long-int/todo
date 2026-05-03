@@ -1,4 +1,4 @@
-package com.emobile.springtodo.integration;
+package com.emobile.springtodo.controller;
 
 import com.emobile.springtodo.dto.TaskDto;
 import com.emobile.springtodo.model.TaskStatus;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-public class ToDoIntegrationTest {
+public class ToDoControllerIntegrationTest {
 
     private final ObjectMapper mapper = new ObjectMapper();
 

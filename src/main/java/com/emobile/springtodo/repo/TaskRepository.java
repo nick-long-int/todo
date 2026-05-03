@@ -30,6 +30,10 @@ public class TaskRepository {
             , ROW_MAPPER, limit, offset);
     }
 
+    public long count(){
+        return jdbcTemplate.queryForObject("select count(*) from task", Long.class);
+    }
+
     public Task findById(String id) {
         try {
             return jdbcTemplate.queryForObject("select * from task where id = ?", ROW_MAPPER, id);
