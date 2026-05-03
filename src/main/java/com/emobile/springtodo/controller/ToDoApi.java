@@ -1,5 +1,6 @@
 package com.emobile.springtodo.controller;
 
+import com.emobile.springtodo.dto.PageResponse;
 import com.emobile.springtodo.dto.TaskDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,7 +35,7 @@ public interface ToDoApi {
 
     @Operation(summary = "Получить список задач")
     @GetMapping
-    List<TaskDto> getAllTasks(
+    PageResponse getAllTasks(
         @Parameter(description = "Максимум записей")
         @RequestParam(defaultValue = "20") @Min(1) @Max(100) int limit,
         @Parameter(description = "Смещение от начала выборки")

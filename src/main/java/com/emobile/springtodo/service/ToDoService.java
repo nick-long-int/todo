@@ -1,5 +1,6 @@
 package com.emobile.springtodo.service;
 
+import com.emobile.springtodo.dto.PageResponse;
 import com.emobile.springtodo.dto.TaskDto;
 import com.emobile.springtodo.mapper.TaskMapper;
 import com.emobile.springtodo.model.Task;
@@ -31,11 +32,19 @@ public class ToDoService {
     }
 
     @Transactional(readOnly = true)
-    public List<TaskDto> getAllTasks(int limit, int offset) {
-        return taskRepository.findAll(limit, offset)
+    public PageResponse getAllTasks(int limit, int offset) {
+        List<TaskDto> tasks = taskRepository.findAll(limit, offset)
             .stream()
             .map(taskMapper::taskToTaskDto)
             .toList();
+        long total = taskRepository.count();
+        return PageResponse.builder()
+            .tasks(tasks)
+            .page(offset / limit + 1)
+            .size(limit)
+            .totalElements(total)
+            .totalPages((int) Math.ceil((double)total / limit))
+            .build();
     }
 
     @Cacheable(key = "#id")

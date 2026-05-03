@@ -1,6 +1,11 @@
+--liquibase formatted sql
+
+--changeset gnn:create-table-if-not-exists
+--preconditions onFail:MARK_RAN
+--precondition-sql-check expectedResult:0 SELECT count(*) FROM information_schema.tables WHERE table_name = 'task'
 CREATE TABLE task(
     id varchar(100) primary key,
     title varchar(20),
     description varchar(100),
     status varchar(10)
-)
+);
