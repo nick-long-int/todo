@@ -4,6 +4,7 @@ import com.emobile.springtodo.dto.PageResponse;
 import com.emobile.springtodo.dto.TaskDto;
 import com.emobile.springtodo.model.TaskStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,7 @@ public class ToDoControllerIntegrationTest {
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", () ->
-            String.format("jdbc:postgresql://%s:%d/testdb", postgres.getHost(), postgres.getMappedPort(5432))
-        );
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.password", postgres::getPassword);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
@@ -65,6 +64,12 @@ public class ToDoControllerIntegrationTest {
         return "http://localhost:" + port + "/api/v1/todo";
     }
 
+    @BeforeAll
+    static void debugInfo() {
+        System.out.println("Postgres JDBC URL: " + postgres.getJdbcUrl());
+        System.out.println("Postgres Host: " + postgres.getHost());
+        System.out.println("Postgres Mapped Port: " + postgres.getMappedPort(5432));
+    }
 
     @Test
     @Sql("/sql/tasks_test.sql")
