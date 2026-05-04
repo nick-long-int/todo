@@ -3,6 +3,12 @@ image: maven:3.9-eclipse-temurin-17
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=./.m2/repository"
 
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+
+services:
+  - docker:dind
+
 stages:
   - build
   - test
@@ -61,8 +67,6 @@ package:
 push-image:
   stage: push-image
   image: docker:latest
-  services:
-    - docker:dind
   before_script:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
   script:
