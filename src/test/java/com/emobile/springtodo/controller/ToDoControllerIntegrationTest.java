@@ -36,6 +36,10 @@ public class ToDoControllerIntegrationTest {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
+    static {
+        System.setProperty("testcontainers.ryuk.disabled", "true");
+    }
+
     @Container
     static PostgreSQLContainer<?> postgres =
         new PostgreSQLContainer<>("postgres:latest")
