@@ -9,12 +9,18 @@ stages:
   - package
   - push-image
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUEST
+      when: never
+    - if: $CI_COMMIT_BRANCH
 
 build:
   stage: build
-  only:
-    - dev
-    - merge_requests
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
   script:
     - 'mvn clean compile'
   cache:
@@ -24,9 +30,9 @@ build:
 
 test:
   stage: test
-  only:
-    - dev
-    - merge_requests
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
   script:
     - 'mvn test'
   cache:
@@ -36,9 +42,9 @@ test:
 
 package:
   stage: package
-  only:
-    - dev
-    - main
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
+    - if: $CI_COMMIT_BRANCH == "main"
   script:
     - 'mvn package -Dmaven.test.skip=true'
   artifacts:
@@ -63,4 +69,5 @@ push-image:
   dependencies:
     - package
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: $CI_COMMIT_BRANCH == "main"
+  cache: {}
