@@ -41,7 +41,8 @@ public class ToDoControllerIntegrationTest {
         new PostgreSQLContainer<>("postgres:latest")
             .withDatabaseName("testdb")
             .withUsername("test")
-            .withPassword("test");
+            .withPassword("test")
+            .withReuse(false);
 
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
