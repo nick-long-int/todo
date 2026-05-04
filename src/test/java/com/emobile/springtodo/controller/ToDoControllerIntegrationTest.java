@@ -1,5 +1,6 @@
 package com.emobile.springtodo.controller;
 
+import com.emobile.springtodo.dto.PageResponse;
 import com.emobile.springtodo.dto.TaskDto;
 import com.emobile.springtodo.model.TaskStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -136,16 +137,16 @@ public class ToDoControllerIntegrationTest {
         int limit = 10;
         int offset = 0;
 
-        ResponseEntity<List<TaskDto>> result = restTemplate.exchange(baseUrl() + "?limit={limit}&offset={offset}",
+        ResponseEntity<PageResponse> result = restTemplate.exchange(baseUrl() + "?limit={limit}&offset={offset}",
             HttpMethod.GET,
             null,
-            new ParameterizedTypeReference<List<TaskDto>>() {
+            new ParameterizedTypeReference<>() {
             },
             limit, offset);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        List<TaskDto> taskDtoList = result.getBody();
-        assertEquals(limit, taskDtoList.size());
+        PageResponse page = result.getBody();
+        assertEquals(limit, page.getTasks().size());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.emobile.springtodo.service;
 
+import com.emobile.springtodo.dto.PageResponse;
 import com.emobile.springtodo.dto.TaskDto;
 import com.emobile.springtodo.mapper.TaskMapperImpl;
 import com.emobile.springtodo.model.Task;
@@ -60,10 +61,12 @@ class ToDoServiceTest {
     @Test
     @DisplayName("Получение списка задач")
     void testGetAllTasks(){
+        int limit = 20;
+        int offset = 0;
 
         when(taskRepository.findAll(anyInt(), anyInt())).thenReturn(new ArrayList<Task>());
 
-        List<TaskDto> result = service.getAllTasks(anyInt(), anyInt());
+        PageResponse result = service.getAllTasks(limit, offset);
 
         verify(taskRepository, times(1)).findAll(anyInt(), anyInt());
         assertNotNull(result);
