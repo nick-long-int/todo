@@ -38,6 +38,7 @@ test:
   variables:
     MAVEN_OPTS: "-Dmaven.repo.local=./.m2/repository"
     TESTCONTAINERS_RYUK_DISABLED: "true"
+    TESTCONTAINERS_HOST_OVERRIDE: "localhost"
   script:
     - 'mvn test'
   cache:
