@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -38,21 +39,13 @@ public class ToDoControllerIntegrationTest {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Container
+    @ServiceConnection
     static PostgreSQLContainer<?> postgres =
         new PostgreSQLContainer<>("postgres:latest")
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test")
             .withReuse(false);
-
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.password", postgres::getPassword);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
-        registry.add("spring.cache.type", () -> "none");
-    }
 
     @LocalServerPort
     private Integer port;
@@ -64,12 +57,6 @@ public class ToDoControllerIntegrationTest {
         return "http://localhost:" + port + "/api/v1/todo";
     }
 
-    @BeforeAll
-    static void debugInfo() {
-        System.out.println("Postgres JDBC URL: " + postgres.getJdbcUrl());
-        System.out.println("Postgres Host: " + postgres.getHost());
-        System.out.println("Postgres Mapped Port: " + postgres.getMappedPort(5432));
-    }
 
     @Test
     @Sql("/sql/tasks_test.sql")
