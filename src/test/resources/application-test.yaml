@@ -1,12 +1,13 @@
 spring:
   liquibase:
-    enabled: true
+    enabled: false
   test:
     database:
       replace: none
   datasource:
     hikari:
       connection-timeout: 60_000
+
 
 info:
   app:
