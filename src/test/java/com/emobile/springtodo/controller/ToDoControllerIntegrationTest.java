@@ -39,13 +39,27 @@ public class ToDoControllerIntegrationTest {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Container
-    @ServiceConnection
     static PostgreSQLContainer<?> postgres =
         new PostgreSQLContainer<>("postgres:latest")
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test")
             .withReuse(false);
+
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+        registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
+
+        // 👇 Добавьте эти строки для Liquibase:
+        registry.add("spring.liquibase.url", postgres::getJdbcUrl);
+        registry.add("spring.liquibase.user", postgres::getUsername);
+        registry.add("spring.liquibase.password", postgres::getPassword);
+
+        registry.add("spring.cache.type", () -> "none");
+    }
 
     @LocalServerPort
     private Integer port;
