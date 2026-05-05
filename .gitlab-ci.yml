@@ -38,9 +38,6 @@ test:
   variables:
     MAVEN_OPTS: "-Dmaven.repo.local=./.m2/repository"
     TESTCONTAINERS_RYUK_DISABLED: "true"
-    TESTCONTAINERS_HOST_OVERRIDE: "docker"
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ""
   script:
     - 'mvn test'
   cache:
