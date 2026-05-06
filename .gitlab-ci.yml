@@ -70,8 +70,8 @@ push-image:
   before_script:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
   script:
-    - docker build -t $DOCKER_HUB_USER/SpringToDo:$CI_COMMIT_SHORT_SHA .
-    - docker push $DOCKER_HUB_USER/SpringToDo:$CI_COMMIT_SHORT_SHA
+    - docker build -t $DOCKER_HUB_USER/springtodo:$CI_COMMIT_SHORT_SHA .
+    - docker push $DOCKER_HUB_USER/springtodo:$CI_COMMIT_SHORT_SHA
   dependencies:
     - package
   rules:
