@@ -1,0 +1,15 @@
+spring:
+  liquibase:
+    enabled: false
+  test:
+    database:
+      replace: none
+  datasource:
+    hikari:
+      connection-timeout: 60_000
+
+
+info:
+  app:
+    name: SpringToDo
+    description: Todo API
