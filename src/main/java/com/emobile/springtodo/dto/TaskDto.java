@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TaskDto {
-    private String id;
+    private Long id;
     @NotBlank
     @Size(min = 5, max = 20)
     private String title;

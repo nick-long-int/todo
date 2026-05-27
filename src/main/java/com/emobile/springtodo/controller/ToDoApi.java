@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 @Tag(name = "Список задач", description = "CRUD для списка задач")
 @RequestMapping("/api/v1/todo")
 public interface ToDoApi {
@@ -31,23 +29,23 @@ public interface ToDoApi {
     @PutMapping("/{id}")
     TaskDto updateTask(@Valid @RequestBody TaskDto taskDto,
                        @Parameter(description = "ID задачи" )
-                       @PathVariable String id);
+                       @PathVariable Long id);
 
     @Operation(summary = "Получить список задач")
     @GetMapping
-    PageResponse getAllTasks(
+    PageResponse getTasks(
         @Parameter(description = "Максимум записей")
-        @RequestParam(defaultValue = "20") @Min(1) @Max(100) int limit,
+        @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size,
         @Parameter(description = "Смещение от начала выборки")
-        @RequestParam(defaultValue = "0") @Min(0) int offset
+        @RequestParam(defaultValue = "0") @Min(0) int page
     );
 
     @Operation(summary = "Получить задачу по id")
     @GetMapping("/{id}")
-    TaskDto getTaskById(@PathVariable String id);
+    TaskDto getTaskById(@PathVariable Long id);
 
     @Operation(summary = "Удалить задачу")
     @DeleteMapping("/{id}")
-    void deleteTaskById(@PathVariable String id);
+    void deleteTaskById(@PathVariable Long id);
 
 }

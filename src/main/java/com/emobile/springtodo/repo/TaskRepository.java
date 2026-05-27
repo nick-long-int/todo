@@ -1,61 +1,48 @@
 package com.emobile.springtodo.repo;
 
-import com.emobile.springtodo.exception.NotFoundException;
 import com.emobile.springtodo.model.Task;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.ResultSet;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
 public class TaskRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final SessionFactory sessionFactory;
 
-    private static final RowMapper<Task> ROW_MAPPER = (ResultSet rs, int rowNum) ->
-        new Task(rs.getString("id"),
-            rs.getString("title"),
-            rs.getString("description"),
-            rs.getString("status"));
-
-    public List<Task> findAll(int limit, int offset) {
-        return jdbcTemplate.query(
-            "select * from task order by id limit ? offset ?"
-            , ROW_MAPPER, limit, offset);
+    private Session getCurrentSession(){
+        return sessionFactory.getCurrentSession();
     }
 
-    public long count(){
-        return jdbcTemplate.queryForObject("select count(*) from task", Long.class);
-    }
-
-    public Task findById(String id) {
-        try {
-            return jdbcTemplate.queryForObject("select * from task where id = ?", ROW_MAPPER, id);
-        } catch (DataAccessException e) {
-            throw new NotFoundException("Task with id " + id + " not found");
-        }
-    }
-
-    public Task save(Task task) {
-        if (task.getId() == null) {
-            task.setId(UUID.randomUUID().toString());
-            jdbcTemplate.update("insert into task values (?,?,?,?)",
-                task.getId(), task.getTitle(), task.getDescription(), task.getStatus());
-        } else {
-            jdbcTemplate.update("update task set title = ?, description = ?, status = ? where id = ?",
-                task.getTitle(), task.getDescription(), task.getStatus(), task.getId());
-        }
-
+    public Task save(Task task){
+        getCurrentSession().persist(task);
         return task;
     }
 
-    public void deleteById(String id) {
-        jdbcTemplate.update("delete from task where id = ?", id);
+
+    public Task findById(Long id){
+        return getCurrentSession().get(Task.class, id);
+    }
+
+
+    public List<Task> findTasksPageable(int page, int size){
+        return getCurrentSession().createQuery("from Task t order by t.id asc", Task.class)
+            .setFirstResult(page * size)
+            .setMaxResults(size).getResultList();
+    }
+
+    public void deleteById(Long id){
+        getCurrentSession().remove(findById(id));
+    }
+
+    public Long count(){
+        return getCurrentSession().createQuery("select count(*) from Task", Long.class).getSingleResult();
     }
 }

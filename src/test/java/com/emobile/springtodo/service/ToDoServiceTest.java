@@ -4,6 +4,7 @@ import com.emobile.springtodo.dto.PageResponse;
 import com.emobile.springtodo.dto.TaskDto;
 import com.emobile.springtodo.mapper.TaskMapperImpl;
 import com.emobile.springtodo.model.Task;
+import com.emobile.springtodo.model.TaskStatus;
 import com.emobile.springtodo.repo.TaskRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -35,7 +35,7 @@ class ToDoServiceTest {
     @DisplayName("Создание задачи")
     void testAddTask() {
         TaskDto dto = new TaskDto();
-        dto.setStatus("created");
+        dto.setStatus(TaskStatus.NEW.name());
         dto.setTitle("something title");
         dto.setDescription("something description");
 
@@ -51,10 +51,10 @@ class ToDoServiceTest {
     @DisplayName("Получение задачи по id")
     void testGetTaskById() {
 
-        when(taskRepository.findById(anyString())).thenReturn(new Task());
-        TaskDto result = service.getTaskById(anyString());
+        when(taskRepository.findById(anyLong())).thenReturn(new Task());
+        TaskDto result = service.getTaskById(anyLong());
 
-        verify(taskRepository, times(1)).findById(anyString());
+        verify(taskRepository, times(1)).findById(anyLong());
         assertNotNull(result);
     }
 
@@ -64,40 +64,40 @@ class ToDoServiceTest {
         int limit = 20;
         int offset = 0;
 
-        when(taskRepository.findAll(anyInt(), anyInt())).thenReturn(new ArrayList<Task>());
+        when(taskRepository.findTasksPageable(anyInt(), anyInt())).thenReturn(new ArrayList<Task>());
 
-        PageResponse result = service.getAllTasks(limit, offset);
+        PageResponse result = service.getTasks(limit, offset);
 
-        verify(taskRepository, times(1)).findAll(anyInt(), anyInt());
+        verify(taskRepository, times(1)).findTasksPageable(anyInt(), anyInt());
         assertNotNull(result);
     }
 
     @Test
     @DisplayName("Удаление задачи по id")
     void testDeleteTask() {
-        service.deleteTaskById(anyString());
-        verify(taskRepository, times(1)).deleteById(anyString());
+        service.deleteTaskById(anyLong());
+        verify(taskRepository, times(1)).deleteById(anyLong());
     }
 
     @Test
     @DisplayName("Обновление задачи по id")
     void testUpdateTask() {
         TaskDto dto = new TaskDto();
-        dto.setStatus("updated");
+        dto.setStatus(TaskStatus.UPDATED.name());
         dto.setTitle("something title");
         dto.setDescription("something description");
 
         Task task = new Task();
-        task.setStatus("created");
+        task.setStatus(TaskStatus.NEW);
 
-        when(taskRepository.findById(anyString())).thenReturn(task);
+        when(taskRepository.findById(anyLong())).thenReturn(task);
         when(taskRepository.save(task)).thenReturn(task);
 
-        dto = service.updateTask(anyString(), dto);
+        dto = service.updateTask(anyLong(), dto);
 
-        verify(taskRepository, times(1)).findById(anyString());
+        verify(taskRepository, times(1)).findById(anyLong());
         verify(taskRepository, times(1)).save(any(Task.class));
-        assertEquals("updated", dto.getStatus());
+        assertEquals(TaskStatus.UPDATED.name(), dto.getStatus());
     }
 
 }
