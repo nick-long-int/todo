@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: SpringToDo
+
+  datasource:
+    url: jdbc:postgresql://localhost:5431/task
+    username: admin
+    password: admin
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-doc
+  use-management-port: false

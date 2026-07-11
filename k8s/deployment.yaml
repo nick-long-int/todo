@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: spring-app
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: spring
+
+  template:
+    metadata:
+      labels:
+        app: spring
+
+    spec:
+      containers:
+        - name: spring-container
+          image: spring-k8s-demo
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 8080
+
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-service:5432/task
+            - name: SPRING_DATASOURCE_USERNAME
+              value: admin
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: admin
+            - name: SPRING_DATA_REDIS_HOST
+              value: redis-service
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
