@@ -20,10 +20,10 @@ spec:
       containers:
         - name: postgres
 
-          image: postgres:latest
+          image: postgres:17-alpine
 
           ports:
-            - containerPort: 5431
+            - containerPort: 5432
 
           env:
             - name: POSTGRES_DB
